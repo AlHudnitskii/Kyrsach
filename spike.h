@@ -2,14 +2,22 @@
 #define SPIKE_H
 
 #include <QWidget>
+#include "levelgenerator.h"
+#include "character.h"
 
 class Spike : public QWidget {
     Q_OBJECT
 public:
-    explicit Spike(QWidget *parent = nullptr);
+    Spike(LevelGenerator *level, int x, int y, QWidget *parent = nullptr);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+
+private:
+    LevelGenerator *m_level;
+    int m_x;
+    int m_y;
 };
 
 #endif // SPIKE_H

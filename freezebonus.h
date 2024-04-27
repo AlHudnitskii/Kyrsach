@@ -2,14 +2,25 @@
 #define FREEZEBONUS_H
 
 #include <QWidget>
+#include "enemy.h"
+#include "levelgenerator.h"
 
 class FreezeBonus : public QWidget {
     Q_OBJECT
 public:
-    explicit FreezeBonus(QWidget *parent = nullptr);
+    FreezeBonus(LevelGenerator *level, int x, int y, QWidget *parent = nullptr);
+
+signals:
+    void enemiesFrozen();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+
+private:
+    LevelGenerator *m_level;
+    int m_x;
+    int m_y;
 };
 
 #endif // FREEZEBONUS_H

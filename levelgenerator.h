@@ -1,27 +1,35 @@
 #ifndef LEVELGENERATOR_H
 #define LEVELGENERATOR_H
 
-#include <vector>
+#include <QVector>
+#include <utility>
 
-enum class TileType { Wall, Coin, ShieldBonus, FreezeBonus, MultiplierBonus, Enemy, Empty };
-
-struct Tile {
-    TileType type;
-};
-
-class Level {
-public:
-    std::vector<std::vector<Tile>> tiles;
-
-    Level(int width, int height);
+enum class TileType {
+    Wall,
+    Coin,
+    ShieldBonus,
+    FreezeBonus,
+    MultiplierBonus,
+    Enemy,
+    Empty
 };
 
 class LevelGenerator {
 public:
-    static Level generateLevel(int width, int height);
+    explicit LevelGenerator(int width, int height);
+    int getWidth() const;
+    int getHeight() const;
+    TileType getTileType(int x, int y) const;
+    void setTileType(int x, int y, TileType type);
+    int getNumCoins() const;
+    void incrementCoins();
 
 private:
-    static TileType getRandomTileType();
+    int m_width;
+    int m_height;
+    QVector<QVector<TileType>> m_tiles;
+    int m_numCoins;
 };
 
 #endif // LEVELGENERATOR_H
+

@@ -1,40 +1,41 @@
 #include "levelgenerator.h"
-#include <cstdlib>
-#include <ctime>
 
-Level::Level(int width, int height) {
-    tiles.resize(height, std::vector<Tile>(width));
+LevelGenerator::LevelGenerator(int width, int height) : m_width(width), m_height(height), m_numCoins(0) {
+    m_tiles.resize(height);
+    for (int y = 0; y < height; ++y) {
+        m_tiles[y].resize(width, TileType::Empty);
+    }
 }
 
-Level LevelGenerator::generateLevel(int width, int height) {
-    Level level(width, height);
-    srand(time(nullptr));
+int LevelGenerator::getWidth() const {
+    return m_width;
+}
 
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            level.tiles[y][x].type = getRandomTileType();
+int LevelGenerator::getHeight() const {
+    return m_height;
+}
+
+TileType LevelGenerator::getTileType(int x, int y) const {
+    if (x >= 0 && x < m_width && y >= 0 && y < m_height) {
+        return m_tiles[y][x];
+    }
+    return TileType::Empty;
+}
+
+void LevelGenerator::setTileType(int x, int y, TileType type) {
+    if (x >= 0 && x < m_width && y >= 0 && y < m_height) {
+        m_tiles[y][x] = type;
+        if (type == TileType::Coin) {
+            m_numCoins++;
         }
     }
-
-    return level;
 }
 
-TileType LevelGenerator::getRandomTileType() {
-    double randomValue = (double)rand() / RAND_MAX;
-
-    if (randomValue < 0.2) {
-        return TileType::Wall;
-    } else if (randomValue < 0.3) {
-        return TileType::Coin;
-    } else if (randomValue < 0.35) {
-        return TileType::ShieldBonus;
-    } else if (randomValue < 0.4) {
-        return TileType::FreezeBonus;
-    } else if (randomValue < 0.45) {
-        return TileType::MultiplierBonus;
-    } else if (randomValue < 0.6) {
-        return TileType::Enemy;
-    } else {
-        return TileType::Empty;
-    }
+int LevelGenerator::getNumCoins() const {
+    return m_numCoins;
 }
+
+void LevelGenerator::incrementCoins() {
+    m_numCoins++;
+}
+

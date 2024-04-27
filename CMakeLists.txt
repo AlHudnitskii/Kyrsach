@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
         shieldbonus.cpp
         spike.cpp
         coin.cpp
+        gamemanager.cpp
+        gamemanager.h
         coin.h
         freezebonus.h
         freezebonus.cpp

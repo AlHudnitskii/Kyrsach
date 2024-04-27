@@ -1,12 +1,23 @@
 #include "freezebonus.h"
 #include <QPainter>
+#include <QMouseEvent>
+#include <QDebug>
 
-FreezeBonus::FreezeBonus(QWidget *parent) : QWidget(parent) {}
+FreezeBonus::FreezeBonus(LevelGenerator *level, int x, int y, QWidget *parent)
+    : QWidget(parent), m_level(level), m_x(x), m_y(y) {
+    setFixedSize(50, 50);
+}
 
 void FreezeBonus::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
+    painter.fillRect(rect(), Qt::blue);
+}
 
-    painter.setBrush(Qt::cyan);
-    painter.drawEllipse(rect());
+void FreezeBonus::mousePressEvent(QMouseEvent *event) {
+    if (m_level && m_level->getTile(m_x, m_y) == TileType::FreezeBonus) {
+
+        emit enemiesFrozen();
+
+        deleteLater();
+    }
 }

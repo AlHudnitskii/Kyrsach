@@ -15,7 +15,7 @@ private:
 
     QWidget *centralWidget;
     QGridLayout *layout;
-    Level level;
+    LevelGenerator level;
 };
 
 #endif // MAINWINDOW_H
