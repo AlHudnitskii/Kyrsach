@@ -1,18 +1,26 @@
 #include "character.h"
 #include <QPainter>
 #include <QKeyEvent>
+#include <QMessageBox>
 
 Character::Character(LevelGenerator *level, QWidget *parent)
     : QWidget(parent), m_level(level), m_coinsCollected(0), m_health(1) {}
 
 void Character::move(int dx, int dy) {
-    int newX = x() + dx;
-    int newY = y() + dy;
-    if (newX >= 0 && newX < width() && newY >= 0 && newY < height()) {
+
+    int currentX = getX();
+    int currentY = getY();
+
+    int newX = currentX + dx;
+    int newY = currentY + dy;
+
+    if (newX >= 0 && newX < m_level->getWidth() && newY >= 0 && newY < m_level->getHeight()) {
         if (m_level->getTile(newX, newY) != TileType::Wall) {
-            move(newX, newY);
+            setX(newX);
+            setY(newY);
         }
     }
+
 }
 
 void Character::setLevel(LevelGenerator *level) {
@@ -61,6 +69,28 @@ void Character::setLevel(LevelGenerator *level) {
     m_level = level;
 }
 
-int Character::getCoinsCollected() const {
-    return m_coinsCollected;
+void Character::checkGoal() {
+    TyleType cellType = m_level->getTile(m_x, m_y);
+
+    if (cellType == TyleType::Goal) {
+        m_timer->stop();
+
+        int coinsEarned = m_coinsCollected * m_health * (500 - m_elapsedTime) / 500;
+
+        ResultWindow *resultWindow = new ResultWindow(coinsEarned);
+        resultWindow->show();
+
+        close();
+    }
+}
+
+void Character::die() {
+    m_timer->stop();
+
+    QMessageBox messageBox;
+    messageBox.setText("Game Over!");
+    messageBox.setInformativeText("You died!");
+    messageBox.exec();
+
+    close();
 }

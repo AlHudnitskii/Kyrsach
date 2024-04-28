@@ -20,7 +20,7 @@ void Spike::mousePressEvent(QMouseEvent *event) {
         character->setHealth(newHealth);
 
         if (newHealth <= 0) {
-            // умер типо, дописать
+            character->die();
         }
     }
 }

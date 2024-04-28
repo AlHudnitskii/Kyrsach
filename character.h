@@ -1,6 +1,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#include <QKeyEvent>
 #include <QWidget>
 #include "levelgenerator.h"
 
@@ -14,6 +15,12 @@ public:
     int getCoinsCollected() const;
     void getHealth() const;
     void setHealth(int health);
+    int getX() const;
+    int getY() const;
+
+public slots:
+    void checkGoal();
+    void die();
 
 signals:
     void coinsCollectedChanged(int count);
@@ -24,8 +31,9 @@ protected:
 
 private:
     LevelGenerator *m_level;
-    int m_coinsCollected; // монеты
-    int m_health; // здоровье
+    int m_coinsCollected;
+    int m_health;
+    int m_elapsedTime;
 };
 
 #endif // CHARACTER_H

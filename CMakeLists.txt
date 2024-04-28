@@ -23,6 +23,10 @@ set(PROJECT_SOURCES
         spike.cpp
         coin.cpp
         gamemanager.cpp
+        coinbonus.cpp
+        imageprovider.cpp
+        imageprovider.h
+        coinbonus.h
         gamemanager.h
         coin.h
         freezebonus.h

@@ -27,7 +27,7 @@ void TileWidget::paintEvent(QPaintEvent *event) {
     case TileType::FreezeBonus:
         painter.fillRect(rect(), Qt::cyan);
         break;
-    case TileType::MultiplierBonus:
+    case TileType::CoinBonus:
         painter.fillRect(rect(), Qt::green);
         break;
     case TileType::Enemy:
