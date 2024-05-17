@@ -16,10 +16,6 @@ LevelGenerator::LevelGenerator(int width, int height) : m_width(width), m_height
     }
 
     generateMaze(1, 1);
-
-    //m_tiles[1][1] = TileType::Character;
-    //m_tiles[height - 2][width - 2] = TileType::Goal;
-
     placeBonus(TileType::BonusShield);
     placeBonus(TileType::BonusFreeze);
     placeBonus(TileType::BonusCoin);
@@ -45,14 +41,12 @@ LevelGenerator::LevelGenerator(int width, int height) : m_width(width), m_height
 }
 
 void LevelGenerator::generateMaze(int startX, int startY) {
-    // Инициализация всех клеток как стены
     for (int y = 0; y < m_height; ++y) {
         for (int x = 0; x < m_width; ++x) {
             m_tiles[y][x] = TileType::Wall;
         }
     }
 
-    // Стек для хранения пути
     QStack<std::pair<int, int>> cellStack;
     cellStack.push({startX, startY});
     setTileType(startX, startY, TileType::Empty);
@@ -61,7 +55,6 @@ void LevelGenerator::generateMaze(int startX, int startY) {
         auto [x, y] = cellStack.top();
         cellStack.pop();
 
-        // Создание и перемешивание направлений
         int directions[4][2] = {{0, -2}, {0, 2}, {-2, 0}, {2, 0}};
         std::random_shuffle(std::begin(directions), std::end(directions));
 
@@ -71,15 +64,14 @@ void LevelGenerator::generateMaze(int startX, int startY) {
 
             if (nx > 0 && ny > 0 && nx < m_width - 1 && ny < m_height - 1) {
                 if (m_tiles[ny][nx] == TileType::Wall) {
-                    setTileType(nx, ny, TileType::Empty); // Очищаем следующую клетку
-                    setTileType(x + direction[0] / 2, y + direction[1] / 2, TileType::Empty); // Создаем проход между текущей и следующей клеткой
+                    setTileType(nx, ny, TileType::Empty);
+                    setTileType(x + direction[0] / 2, y + direction[1] / 2, TileType::Empty);
                     cellStack.push({nx, ny});
                 }
             }
         }
     }
 
-    // Создаем гарантированный путь от левого верхнего угла к правому нижнему
     int currentX = startX;
     int currentY = startY;
     while (currentX < m_width - 2 || currentY < m_height - 2) {
