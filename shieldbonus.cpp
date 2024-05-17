@@ -14,10 +14,10 @@ void ShieldBonus::paintEvent(QPaintEvent *event) {
     painter.fillRect(rect(), Qt::green);
 }
 
-void ShieldBonus::mousePressEvent(QMouseEvent *event) {
-    if (m_level && m_level->getTile(m_x, m_y) == TileType::ShieldBonus) {
+void ShieldBonus::mousePressEvent(QMouseEvent *event, Character* character) {
+    if (m_level && m_level->getTileType(m_x, m_y) == TileType::BonusShield) {
 
-        int newHealth = character->getHealth() + 1;
+        int newHealth = (character->getHealth());
         character->setHealth(newHealth);
 
         emit healthIncreased(newHealth);

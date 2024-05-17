@@ -12,17 +12,20 @@ void Enemy::startMoving() {
 }
 
 void Enemy::move() {
-    if (m_level->getTile(m_x + m_direction, m_y) == TileType::Wall) {
+    int nextX = m_x + m_direction;
+
+    if (m_level->getTileType(nextX, m_y) == TileType::Wall) {
         m_direction *= -1;
     } else {
         m_x += m_direction;
     }
+
+    update();
 }
 
 void Enemy::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-
     painter.setBrush(Qt::red);
     painter.drawEllipse(rect());
 }

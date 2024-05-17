@@ -1,4 +1,4 @@
-#ifndef TILEWIDGET_H
+  #ifndef TILEWIDGET_H
 #define TILEWIDGET_H
 
 #include <QWidget>
@@ -11,11 +11,10 @@ public:
 
     void setType(TileType type);
 
+    TileType m_type;
 protected:
     void paintEvent(QPaintEvent *event) override;
 
-private:
-    TileType m_type;
 };
 
 #endif // TILEWIDGET_H

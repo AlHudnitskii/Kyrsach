@@ -14,8 +14,8 @@ void Coin::paintEvent(QPaintEvent *event) {
     painter.fillRect(rect(), Qt::yellow);
 }
 
-void Coin::mousePressEvent(QMouseEvent *event) {
-    if (m_level && m_level->getTile(m_x, m_y) == TyleType::Coin) {
+void Coin::mousePressEvent(QMouseEvent *event, Character* character ) {
+    if (m_level && m_level->getTileType(m_x, m_y) == TileType::Coin) {
         int newCoins = character->getCoinsCollected() + 5;
         character->setCoinsCollected(newCoins);
 

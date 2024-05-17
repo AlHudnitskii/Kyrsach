@@ -1,4 +1,5 @@
 #include "spike.h"
+#include "character.h"
 #include <QPainter>
 #include <QMouseEvent>
 #include <QDebug>
@@ -14,8 +15,8 @@ void Spike::paintEvent(QPaintEvent *event) {
     painter.fillRect(rect(), Qt::red);
 }
 
-void Spike::mousePressEvent(QMouseEvent *event) {
-    if (m_level && m_level->getTile(m_x, m_y) == TyleType::Spike) {
+void Spike::mousePressEvent(QMouseEvent *event, Character* character) {
+    if (m_level && m_level->getTileType(m_x, m_y) == TileType::Spike) {
         int newHealth = character->getHealth() - 1;
         character->setHealth(newHealth);
 

@@ -22,15 +22,15 @@ set(PROJECT_SOURCES
         shieldbonus.cpp
         spike.cpp
         coin.cpp
-        gamemanager.cpp
         coinbonus.cpp
-        imageprovider.cpp
-        imageprovider.h
-        coinbonus.h
-        gamemanager.h
-        coin.h
-        freezebonus.h
         freezebonus.cpp
+        startwindow.cpp
+        gamemanager.cpp
+        gamemanager.h
+        startwindow.h
+        freezebonus.h
+        coinbonus.h
+        coin.h
         spike.h
         shieldbonus.h
         enemy.h
@@ -39,6 +39,7 @@ set(PROJECT_SOURCES
         levelgenerator.h
         mainwindow.h
         mainwindow.ui
+        startwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

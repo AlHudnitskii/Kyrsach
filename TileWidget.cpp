@@ -21,13 +21,13 @@ void TileWidget::paintEvent(QPaintEvent *event) {
     case TileType::Coin:
         painter.fillRect(rect(), Qt::yellow);
         break;
-    case TileType::ShieldBonus:
+    case TileType::BonusShield:
         painter.fillRect(rect(), Qt::blue);
         break;
-    case TileType::FreezeBonus:
+    case TileType::BonusFreeze:
         painter.fillRect(rect(), Qt::cyan);
         break;
-    case TileType::CoinBonus:
+    case TileType::BonusCoin:
         painter.fillRect(rect(), Qt::green);
         break;
     case TileType::Enemy:
@@ -36,9 +36,15 @@ void TileWidget::paintEvent(QPaintEvent *event) {
     case TileType::Empty:
         painter.fillRect(rect(), Qt::white);
         break;
+    case TileType::Character:
+        painter.fillRect(rect(), Qt::gray);
+        break;
+    case TileType::Goal:
+        painter.fillRect(rect(), Qt::darkGreen);
+        break;
     }
+
 
     painter.setPen(Qt::black);
     painter.drawRect(0, 0, cellSize - 1, cellSize - 1);
 }
-

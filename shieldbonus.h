@@ -1,7 +1,8 @@
 #ifndef SHIELDBONUS_H
 #define SHIELDBONUS_H
 
-#include "levelgenerator.h""
+#include "levelgenerator.h"
+#include "character.h"
 #include <QWidget>
 
 class ShieldBonus : public QWidget {
@@ -14,6 +15,7 @@ signals:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void mousePressEvent(QMouseEvent *event, Character* character);
 
 private:
     LevelGenerator *m_level;

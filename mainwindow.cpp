@@ -1,8 +1,10 @@
 #include "mainwindow.h"
 #include "TileWidget.h"
+#include "levelgenerator.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), centralWidget(new QWidget), layout(new QGridLayout), level(LevelGenerator::LevelGenerator(10, 10)) {
+    : QMainWindow(parent), centralWidget(new QWidget), layout(new QGridLayout), level(60, 30)
+{
     setCentralWidget(centralWidget);
     centralWidget->setLayout(layout);
 
@@ -10,12 +12,20 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowState(Qt::WindowFullScreen);
 }
 
+MainWindow::~MainWindow()
+{
+    delete layout;
+    delete centralWidget;
+}
+
 void MainWindow::createLevel() {
-    const std::vector<std::vector<Tile>>& tiles = level.getTiles();
-    for (int y = 0; y < level.tiles.size(); ++y) {
-        for (int x = 0; x < level.tiles[y].size(); ++x) {
+    const int width = level.getWidth();
+    const int height = level.getHeight();
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
             TileWidget *tileWidget = new TileWidget(centralWidget);
-            tileWidget->setType(level.tiles[y][x].type);
+            tileWidget->setType(level.getTileType(x, y));
             layout->addWidget(tileWidget, y, x);
         }
     }

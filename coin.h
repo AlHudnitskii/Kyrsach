@@ -12,7 +12,7 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
-    void mousePressEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event, Character* character);
 
 signals:
     void coinsChanged(int count);

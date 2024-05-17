@@ -1,3 +1,4 @@
+#include "character.h"
 #include "coinbonus.h"
 #include <QPainter>
 #include <QMouseEvent>
@@ -13,10 +14,11 @@ void CoinBonus::paintEvent(QPaintEvent *event) {
     painter.fillRect(rect(), Qt::blue);
 }
 
-void CoinBonus::mousePressEvent(QMouseEvent *event) {
-    if (m_level && m_level->getTile(m_x, m_y) == TleType::FreezeBonus) {
+void CoinBonus::mousePressEvent(QMouseEvent *event, Character* character) {
+    if (m_level && m_level->getTileType(m_x, m_y) == TileType::BonusCoin) {
 
-        emit multiply();
+            character->setCoinsCollected(character->getCoinsCollected() + 2);
+        multiply(2);
 
         deleteLater();
     }
