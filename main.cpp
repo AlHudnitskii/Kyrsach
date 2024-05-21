@@ -1,6 +1,10 @@
 #include "startwindow.h"
 #include "mainwindow.h"
 #include <QApplication>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include "character.h"
+#include "levelgenerator.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,5 +22,7 @@ int main(int argc, char *argv[])
     });
 
     startWindow.show();
+
+
     return a.exec();
 }

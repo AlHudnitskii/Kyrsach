@@ -9,6 +9,8 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
+    void createLevel(LevelGenerator *levelGenerator);
+
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 

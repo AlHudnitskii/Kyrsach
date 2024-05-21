@@ -2,45 +2,39 @@
 #include <cstdlib>
 #include <ctime>
 #include <QStack>
+#include <QDebug>
+#include <QGraphicsItem>
 
 LevelGenerator::LevelGenerator(int width, int height) : m_width(width), m_height(height), m_numCoins(0) {
     srand(time(nullptr));
 
-    // Set the border walls
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            if (x == 0 || y == 0 || x == width - 1 || y == height - 1) {
+            if (x == 0 || y == 0 || x == width - 1|| y == height - 1) {
                 setTileType(x, y, TileType::Wall);
             }
         }
     }
+    generateMaze(1,1);
 
-    generateMaze(1, 1);
-    placeBonus(TileType::BonusShield);
-    placeBonus(TileType::BonusFreeze);
-    placeBonus(TileType::BonusCoin);
-    placeBonus(TileType::BonusShield);
-    placeBonus(TileType::BonusFreeze);
-    placeBonus(TileType::BonusCoin);
-    placeBonus(TileType::BonusShield);
-    placeBonus(TileType::BonusFreeze);
-    placeBonus(TileType::BonusCoin);
-    placeBonus(TileType::BonusShield);
-    placeBonus(TileType::BonusFreeze);
-    placeBonus(TileType::BonusCoin);
+    for(int i = 0; i < 3; ++i) {
+        placeBonus(TileType::BonusShield);
+        placeBonus(TileType::BonusFreeze);
+        placeBonus(TileType::BonusCoin);
+    }
 
     placeEntities(TileType::Enemy, 10);
-
-
 
     placeSpikes(3, 3, 2);
 
     m_tiles[1][1] = TileType::Character;
+
     m_tiles[height - 2][width - 2] = TileType::Goal;
 
 }
 
 void LevelGenerator::generateMaze(int startX, int startY) {
+
     for (int y = 0; y < m_height; ++y) {
         for (int x = 0; x < m_width; ++x) {
             m_tiles[y][x] = TileType::Wall;
@@ -62,7 +56,7 @@ void LevelGenerator::generateMaze(int startX, int startY) {
             int nx = x + direction[0];
             int ny = y + direction[1];
 
-            if (nx > 0 && ny > 0 && nx < m_width - 1 && ny < m_height - 1) {
+            if (nx >= 0 && ny >= 0 && nx < m_width - 1 && ny < m_height - 1) {
                 if (m_tiles[ny][nx] == TileType::Wall) {
                     setTileType(nx, ny, TileType::Empty);
                     setTileType(x + direction[0] / 2, y + direction[1] / 2, TileType::Empty);
@@ -72,7 +66,19 @@ void LevelGenerator::generateMaze(int startX, int startY) {
         }
     }
 
-    int currentX = startX;
+    /*for (int i = 0; i < m_height - 1; ++i) {
+        if (i % 3 != 0) {
+            setTileType(m_width - 2, i, TileType::Empty);
+        }
+    }
+
+    for (int i = 0; i < m_width - 1; ++i) {
+        if (i % 3 != 0) {
+            setTileType(i, m_height - 2, TileType::Empty);
+        }
+    }*/
+
+    /*int currentX = startX;
     int currentY = startY;
     while (currentX < m_width - 2 || currentY < m_height - 2) {
         if (currentX < m_width - 2) {
@@ -83,6 +89,18 @@ void LevelGenerator::generateMaze(int startX, int startY) {
             currentY++;
             setTileType(currentX, currentY, TileType::Empty);
         }
+    }*/
+
+    for (int i = 1; i < m_width - 1; ++i) {
+        setTileType(i, m_height - 2, TileType::Empty);
+    }
+
+    for (int i = 1; i < m_height - 1; ++i) {
+        setTileType( 1, i, TileType::Empty);
+    }
+
+    for (int i = 1; i < m_height - 1; ++i) {
+        setTileType( m_width - 2, i, TileType::Empty);
     }
 
     int coinsPlaced = 0;
@@ -95,7 +113,6 @@ void LevelGenerator::generateMaze(int startX, int startY) {
             coinsPlaced++;
         }
     }
-
 }
 
 QVector<QVector<TileType>> LevelGenerator::generateLevel() const {
@@ -177,11 +194,13 @@ void LevelGenerator::setTileType(int x, int y, TileType type) {
         if (static_cast<int>(m_tiles[y].size()) <= x)
             m_tiles[y].resize(x + 1);
 
-        m_tiles[y][x] = type;
-
-        if (type == TileType::Coin) {
+        if (m_tiles[y][x] == TileType::Coin && type != TileType::Coin) {
+            m_numCoins--;
+        } else if (m_tiles[y][x] != TileType::Coin && type == TileType::Coin) {
             m_numCoins++;
         }
+
+        m_tiles[y][x] = type;
     }
 }
 
@@ -200,3 +219,4 @@ TileType LevelGenerator::tileTypeAt(int x, int y) const {
         return TileType::OutOfBounds;
     }
 }
+

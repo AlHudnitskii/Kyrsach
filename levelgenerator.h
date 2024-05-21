@@ -3,6 +3,8 @@
 
 #include <QVector>
 #include <utility>
+#include <QPainter>
+#include <QGraphicsScene>
 
 enum class TileType {
     Empty,
@@ -30,7 +32,6 @@ public:
     int getWidth() const;
     int getHeight() const;
     TileType getTileType(int x, int y) const;
-    void setTileType(int x, int y, TileType type);
     int getNumCoins() const;
     void incrementCoins();
     TileType tileTypeAt(int x, int y) const;
@@ -38,12 +39,22 @@ public:
     void placeBonus(TileType bonusType);
     void placeEntities(TileType entityType, int count);
     void placeSpikes(int spikeCount1, int spikeCount2, int spikeCount3);
+    void paintTile(QPainter &painter, int x, int y);
+    void updateTileColor(int x, int y, TileType type);
 
-private:
     int m_width;
     int m_height;
+
+//signals:
+//    void tileUpdated(int x, int y, TileType type);
+
+public slots:
+    void setTileType(int x, int y, TileType type);
+
+private:
     QVector<QVector<TileType>> m_tiles;
     int m_numCoins;
+    QGraphicsScene* m_scene;
 };
 
 #endif // LEVELGENERATOR_H

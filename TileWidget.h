@@ -14,7 +14,6 @@ public:
     TileType m_type;
 protected:
     void paintEvent(QPaintEvent *event) override;
-
 };
 
 #endif // TILEWIDGET_H

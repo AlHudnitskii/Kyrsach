@@ -17,7 +17,7 @@ void CoinBonus::paintEvent(QPaintEvent *event) {
 void CoinBonus::mousePressEvent(QMouseEvent *event, Character* character) {
     if (m_level && m_level->getTileType(m_x, m_y) == TileType::BonusCoin) {
 
-            character->setCoinsCollected(character->getCoinsCollected() + 2);
+        character->setCoinsCollected(character->getCoinsCollected() + 2);
         multiply(2);
 
         deleteLater();

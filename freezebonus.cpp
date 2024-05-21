@@ -15,9 +15,7 @@ void FreezeBonus::paintEvent(QPaintEvent *event) {
 
 void FreezeBonus::mousePressEvent(QMouseEvent *event) {
     if (m_level && m_level->getTileType(m_x, m_y) == TileType::BonusFreeze) {
-
         emit enemiesFrozen();
-
         deleteLater();
     }
 }
