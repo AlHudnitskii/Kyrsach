@@ -2,10 +2,11 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QDebug>
+#include "const.h"
 
 FreezeBonus::FreezeBonus(LevelGenerator *level, int x, int y, QWidget *parent)
     : QWidget(parent), m_level(level), m_x(x), m_y(y) {
-    setFixedSize(50, 50);
+    setFixedSize(SIZE_X, SIZE_Y);
 }
 
 void FreezeBonus::paintEvent(QPaintEvent *event) {

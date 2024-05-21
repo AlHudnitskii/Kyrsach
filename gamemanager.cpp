@@ -1,4 +1,5 @@
 #include "gamemanager.h"
+#include "const.h"
 
 GameManager::GameManager(QWidget *parent) : QWidget(parent), m_level(60, 30) {
     createLevel();
@@ -7,7 +8,7 @@ GameManager::GameManager(QWidget *parent) : QWidget(parent), m_level(60, 30) {
 }
 
 void GameManager::createLevel() {
-    m_level = LevelGenerator(60, 30);
+    m_level = LevelGenerator(GLOBAL_WIDTH, GLOBAL_HEIGHT);
 }
 
 void GameManager::setupUI() {

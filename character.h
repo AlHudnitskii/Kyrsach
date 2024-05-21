@@ -10,13 +10,13 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QGraphicsRectItem>
+#include "mainwindow.h"
 
 class Character : public QWidget {
     Q_OBJECT
 public:
     Character(LevelGenerator *levelgenerator, QGraphicsScene *scene,  QWidget *parent = nullptr);
 
-    //void move(int dx, int dy);
     void setLevel(LevelGenerator *level);
 
     int getCoinsCollected() const;
@@ -35,12 +35,11 @@ public:
     void checkGoal();
     void die();
 
-    QColor getTileColor(TileType tileType);
+    void setMainWindow(MainWindow* mainWindow);
 
 signals:
     void coinsCollectedChanged(int count);
     void moved();
-
 
 private slots:
     void move(int dx, int dy);
@@ -55,10 +54,12 @@ private:
 
     int m_coinsCollected;
     int m_health;
+    int m_points;
 
     QElapsedTimer m_timer;
     QGraphicsRectItem *m_graphicsItem;
     QGraphicsScene* scene;
+    MainWindow* m_mainWindow;
 
     int m_x;
     int m_y;

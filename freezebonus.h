@@ -15,7 +15,7 @@ signals:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
-    void mousePressEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event);
 
 private:
     LevelGenerator *m_level;

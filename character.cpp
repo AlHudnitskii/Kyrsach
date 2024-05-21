@@ -1,10 +1,13 @@
 #include "character.h"
+#include "const.h"
 #include <QPainter>
 #include <QKeyEvent>
 #include <QMessageBox>
 #include <QDebug>
 #include <QGraphicsItem>
 #include <QTimer>
+#include <QMap>
+#include <QColor>
 
 QMap<TileType, QColor> tileColorMap = {
     {TileType::Empty, Qt::white},
@@ -13,8 +16,8 @@ QMap<TileType, QColor> tileColorMap = {
     {TileType::Goal, Qt::darkGreen}
 };
 
-Character::Character(LevelGenerator *levelGenerator,QGraphicsScene *scene, QWidget *parent)
-    : QWidget(parent), m_level(levelGenerator), m_coinsCollected(0), m_health(1), m_x(30), m_y(30) {
+Character::Character(LevelGenerator *levelGenerator, QGraphicsScene *scene, QWidget *parent)
+    : QWidget(parent), m_level(levelGenerator), m_coinsCollected(START_COINS), m_health(START_HEALTH), m_x(START_X), m_y(START_Y) {
 
     m_graphicsItem = new QGraphicsRectItem();
     scene->addItem(m_graphicsItem);
@@ -25,47 +28,76 @@ Character::Character(LevelGenerator *levelGenerator,QGraphicsScene *scene, QWidg
     m_timer.start();
 }
 
-
 void Character::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    // Рисование персонажа (пример)
     painter.setBrush(QBrush(tileColorMap[TileType::Character]));
-    painter.drawRect(m_x * 30, m_y * 30, 30, 30);
+    painter.drawRect(m_x * SQUARE_SIZE, m_y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
 }
 
 void Character::move(int dx, int dy) {
     qDebug() << "Move method called with dx:" << dx << "dy:" << dy;
-    int newX = m_x + dx;
-    int newY = m_y + dy;
 
-    TileType tileType = m_level->getTileType(newX, newY);
-    if (tileType != TileType::Wall) {
+    int newX = m_x;
+    int newY = m_y;
+
+    while (true) {
+        newX += dx;
+        newY += dy;
+
+        TileType tileType = m_level->getTileType(newX, newY);
+        if (tileType == TileType::Wall) {
+            qDebug() << "Wall encountered, character cannot move";
+            break;
+        }
+
         qDebug() << "Moving character";
 
+        TileType tileTypeFor = m_level->getTileType(newX, newY);
+        if (tileTypeFor == TileType::Enemy) {
+            qDebug() << "Enemy";
+            m_health--;
+            setHealth(m_health--);
+        }
+        else if (tileTypeFor == TileType::Coin){
+            m_level->setTileType(newX, newY, TileType::Empty);
+            qDebug() << "Coin";
+            m_coinsCollected++;
+            setCoinsCollected(m_coinsCollected++);
+        }
+        else if (tileTypeFor == TileType::BonusShield){
+            qDebug() << "BonusShield";
+            m_level->setTileType(newX, newY, TileType::Empty);
+            m_health++;
+        }
+        else if (tileTypeFor == TileType::BonusCoin){
+            qDebug() << "BonusCoin";
+            m_level->setTileType(newX, newY, TileType::Empty);
+            m_coinsCollected *= 2;
+            setCoinsCollected(m_coinsCollected *= 2);
+        }
+        else if (tileTypeFor == TileType::BonusFreeze){
+            qDebug() << "BonusFreeze";
+            m_level->setTileType(newX, newY, TileType::Empty);
+            m_health += 2;
+            setHealth(m_health += 2);
+        }
 
-        //m_graphicsItem->setRect(m_x * 30, m_y * 30, 30, 30);
-        //m_graphicsItem->setBrush(QBrush(Qt::gray));
+        if(m_health <= 0) {
+            die();
+        }
 
+        m_level->setTileType(m_x, m_y, TileType::Empty);
 
-        m_level->setTileType(m_y, m_x, TileType::Empty);
-        scene->addRect(m_x * 30, m_y * 30, 30, 30, QPen(), QBrush(tileColorMap[TileType::Empty]));
+        m_level->setTileType(newX, newY, TileType::Character);
 
-        // Обновление координат
         m_x = newX;
         m_y = newY;
 
-        // Установка нового типа и цвета для новой клетки
-        m_level->setTileType(m_y, m_x, TileType::Character);
-        scene->addRect(m_x * 30, m_y * 30, 30, 30, QPen(), QBrush(tileColorMap[TileType::Character]));
-
-        // Обновление координат
-        m_x = newX;
-        m_y = newY;
 
         emit moved();
+
+        checkGoal();
     }
-    checkGoal();
-    m_graphicsItem->update(); // Обновление QGraphicsItem
 }
 
 void Character::setX(int x) {
@@ -122,28 +154,42 @@ void Character::keyPressEvent(QKeyEvent *event) {
 
 void Character::checkGoal() {
     qDebug() << "CheckGoal";
-    TileType cellType = m_level->tileTypeAt(m_x, m_y);
-    if (cellType == TileType::Goal) {
+    qDebug() << m_x << " " << m_y;
+    if (m_x == GLOBAL_WIDTH - 2 && m_y == GLOBAL_HEIGHT - 2) {
+
         qDebug() << "Goal is check";
+        m_points = m_coinsCollected * 150 + 1000 * m_coinsCollected / (m_timer.elapsed() / 100);
+
         QMessageBox messageBox;
         messageBox.setText("Goal reached!");
         qint64 elapsedTime = m_timer.elapsed();
-        QString infoText = QString("Elapsed time: %1 milliseconds\nReceived coins: %2")
+        QString infoText = QString("Elapsed time: %1 milliseconds\nReceived coins: %2\nYour points: %3")
                                .arg(elapsedTime)
-                               .arg(m_coinsCollected);
+                               .arg(m_coinsCollected)
+                               .arg(m_points);
         messageBox.setInformativeText(infoText);
         messageBox.exec();
+        m_timer.invalidate();
+
+        m_mainWindow->close();
+
     }
 }
 
 
 void Character::die() {
-    m_timer.invalidate();
-
     QMessageBox messageBox;
     messageBox.setText("Game Over!");
-    messageBox.setInformativeText("You died!");
+    qint64 elapsedTime = m_timer.elapsed();
+    QString infoTextForDeath = QString("Elapsed time before death: %1 milliseconds\n"
+                                       "Received coins before death: %2\n")
+                                   .arg(elapsedTime)
+                                   .arg(m_coinsCollected);
+    messageBox.setInformativeText(infoTextForDeath);
     messageBox.exec();
-
-    close();
+    m_timer.invalidate();
+    m_mainWindow->close();
+}
+void Character::setMainWindow(MainWindow* mainWindow) {
+    m_mainWindow = mainWindow;
 }

@@ -1,11 +1,13 @@
+#include "const.h"
 #include "levelgenerator.h"
 #include <cstdlib>
 #include <ctime>
 #include <QStack>
 #include <QDebug>
 #include <QGraphicsItem>
+#include <QRandomGenerator>
 
-LevelGenerator::LevelGenerator(int width, int height) : m_width(width), m_height(height), m_numCoins(0) {
+LevelGenerator::LevelGenerator(int width, int height) : m_width(GLOBAL_WIDTH), m_height(GLOBAL_HEIGHT), m_numCoins(START_COINS) {
     srand(time(nullptr));
 
     for (int y = 0; y < height; ++y) {
@@ -15,7 +17,7 @@ LevelGenerator::LevelGenerator(int width, int height) : m_width(width), m_height
             }
         }
     }
-    generateMaze(1,1);
+    generateMaze(START_X,START_Y);
 
     for(int i = 0; i < 3; ++i) {
         placeBonus(TileType::BonusShield);
@@ -23,7 +25,7 @@ LevelGenerator::LevelGenerator(int width, int height) : m_width(width), m_height
         placeBonus(TileType::BonusCoin);
     }
 
-    placeEntities(TileType::Enemy, 10);
+    placeEntities(TileType::Enemy, ENEMY_AMOUNT);
 
     placeSpikes(3, 3, 2);
 
@@ -66,31 +68,6 @@ void LevelGenerator::generateMaze(int startX, int startY) {
         }
     }
 
-    /*for (int i = 0; i < m_height - 1; ++i) {
-        if (i % 3 != 0) {
-            setTileType(m_width - 2, i, TileType::Empty);
-        }
-    }
-
-    for (int i = 0; i < m_width - 1; ++i) {
-        if (i % 3 != 0) {
-            setTileType(i, m_height - 2, TileType::Empty);
-        }
-    }*/
-
-    /*int currentX = startX;
-    int currentY = startY;
-    while (currentX < m_width - 2 || currentY < m_height - 2) {
-        if (currentX < m_width - 2) {
-            currentX++;
-            setTileType(currentX, currentY, TileType::Empty);
-        }
-        if (currentY < m_height - 2) {
-            currentY++;
-            setTileType(currentX, currentY, TileType::Empty);
-        }
-    }*/
-
     for (int i = 1; i < m_width - 1; ++i) {
         setTileType(i, m_height - 2, TileType::Empty);
     }
@@ -104,7 +81,7 @@ void LevelGenerator::generateMaze(int startX, int startY) {
     }
 
     int coinsPlaced = 0;
-    while (coinsPlaced < 100) {
+    while (coinsPlaced < COINS_SPAWN_AMOUNT) {
         int x = rand() % m_width;
         int y = rand() % m_height;
 

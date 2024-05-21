@@ -6,16 +6,17 @@
 #include <QGraphicsView>
 #include "levelgenerator.h"
 #include "character.h"
+#include "const.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), centralWidget(new QWidget), layout(new QGridLayout), level(60, 30)
+    : QMainWindow(parent), centralWidget(new QWidget), layout(new QGridLayout), level(GLOBAL_WIDTH, GLOBAL_HEIGHT)
 {
     setCentralWidget(centralWidget);
     centralWidget->setLayout(layout);
 
     QGraphicsScene *scene = new QGraphicsScene(this);
-    scene->setSceneRect(0, 0, 1800, 900);
-    LevelGenerator *levelGenerator = new LevelGenerator(60, 30);
+    scene->setSceneRect(0, 0, 30 * GLOBAL_WIDTH, 30 * GLOBAL_HEIGHT);
+    LevelGenerator *levelGenerator = new LevelGenerator(GLOBAL_WIDTH, GLOBAL_HEIGHT);
     Character *character = new Character(levelGenerator, scene , this);
 
     createLevel(levelGenerator);

@@ -26,6 +26,7 @@ set(PROJECT_SOURCES
         freezebonus.cpp
         startwindow.cpp
         gamemanager.cpp
+        const.h
         gamemanager.h
         startwindow.h
         freezebonus.h

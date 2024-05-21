@@ -10,6 +10,8 @@ class Enemy : public QWidget {
 public:
     Enemy(LevelGenerator *level, int startX, int startY);
     void startMoving();
+    void stopMoving();
+
 
 private slots:
     void move();
